@@ -4,7 +4,7 @@ FIPA module belonging to JADE 4.5.4 update proposal to OpenJDK-17 and, Java Plat
 
 
 
-## `module-info.java` Proposed
+## Proposed module: `module-info.java`
 
 ```java
 
