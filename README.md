@@ -1,15 +1,22 @@
-# p10-fipa-corba
+# p10-fipa-corba: a proposal for upgrade
 
-FIPA module belonging to JADE 4.5.4 update proposal to OpenJDK-17 and, Java Platform Module System with built-in GlassFish CORBA ORB.
+The full description of this update proposal can be found at:
+-  <https://dpsframework.org/proposals/P10-FIPA-CORBA_en.html>
+
+## 1. Introduction
+
+### 1.1. Description
+
+- It is proposed to temporarily extract the FIPA module from the core of the JADE platform development. Since, with the current version of Java JDK-17 or higher, it is no longer possible to compile JADE. This is caused because the CORBA libraries have been removed from the core of the Java SE Standard releases and the Java JDK development release versions 17 and higher.
+
+- Once the FIPA separation of the JADE core has been carried out, it will be possible to know the scope of the necessary changes in the FIPA module; know which are the necessary libraries of GlassFish of CORBA ORB to achieve optimal stability; and allow later integration of the FIPA module with JADE compiled with OpenJDK-17 or higher.
 
 
-
-## Proposed module: `module-info.java`
+## 1.2 An example of the proposed module: `module-info.java` 
 
 ```java
-
 /**
- * JADE Revision 6868 version 4.5.4. Scagliotti and G. Caire.
+ * JADE Revision 6868 version 4.5.4. by, Enrico Scagliotti and Giovanni Caire.
  * Source:   https://jade.tilab.com/svn/jade/trunk
  * Revision: 6868
  * Author: caire
@@ -23,9 +30,9 @@ FIPA module belonging to JADE 4.5.4 update proposal to OpenJDK-17 and, Java Plat
  * Message: Upgraded version to 4.5.4
  * Modified : /trunk/build.properties
  * ---
- * Proposal:   P10-FIPA-CORBA   https://dpsframework.org/proposals/P10-FIPA-CORBA_en.html
- * Repository: GitHub           https://github.com/dpsframework/p10-fipa-corba   
- * CORBA:      https://repo1.maven.org/maven2/org/glassfish/corba/glassfish-corba-omgapi/4.1.0/
+ * This proposal: P10-FIPA-CORBA   https://dpsframework.org/proposals/P10-FIPA-CORBA_en.html
+ * Source at:     GitHub           https://github.com/dpsframework/p10-fipa-corba   
+ * CORBA at:      https://repo1.maven.org/maven2/org/glassfish/corba/glassfish-corba-omgapi/4.1.0/
  *             glassfish-corba-omgapi-4.1.0-sources.jar          2017-07-14 15:15   1470786 
  */
 module org.fipa {
@@ -39,33 +46,27 @@ module org.fipa {
 	requires java.base;
 }
 
-
 ```
 
-
-
-## How to compile step by step
+### 1.3. Compilation and packaging test
 
 
 ```shell
+Windows:    
+             dir /s/b *.java   >  sources.txt
+GNU and OS-X:    
+             find . -iname *java -type f   >   sources.txt
+All of them: 
 
+javac --module-path org.fipa @sources.txt -d builded/org.fipa -verbose
+jar -cvf org.fipa-2002.jar builded/org.fipa/module-info.class -C builded/org.fipa .
   
-  dir /s/b *.java > sources.txt
-  javac --module-path org.fipa @sources.txt -d builded/classes/org.fipa -verbose
-  jar -cvf org.fipa-2002-jdk17.jar builded\classes\org.fipa\module-info.class -C builded\classes\org.fipa .
-  
-  
-
-
 ```
 
 
+## OpenJDK-11  Detected Java Problems 
 
-
-
-
-## OpenJDK-17  Java Problems 
-
+The `master` branch contains the original source code of FIPA 2002 by JADE and CORBA indicated in previous paragraphs. The `p10-FIPA` branch contains the corrections and performance tests.
 
 
 |       |  Description  |  Resource  |  Path  |  Location  |  Type  |  
