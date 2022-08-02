@@ -48,18 +48,25 @@ module org.fipa {
 
 ```
 
-### 1.3. Compilation and packaging test
+### 1.3. Raw compilation and packaging
 
 
 ```shell
-Windows:    
-             dir /s/b *.java   >  sources.txt
-GNU and OS-X:    
-             find . -iname *java -type f   >   sources.txt
-All of them: 
 
+Windows:
+-----------
+dir /s/b *.java   >  sources.txt
 javac --module-path org.fipa @sources.txt -d builded/org.fipa -verbose
 jar -cvf org.fipa-2002.jar builded/org.fipa/module-info.class -C builded/org.fipa .
+
+
+
+GNU and OS-X:    
+------------
+find . -iname *java -type f   >   sources.txt
+javac --module-path org.fipa @sources.txt -d builded/org.fipa -verbose
+jar -cvf org.fipa-2002.jar builded/org.fipa/module-info.class -C builded/org.fipa .
+
   
 ```
 
@@ -156,6 +163,6 @@ The `master` branch contains the original source code of FIPA 2002 by JADE and C
 
 
 
-## Testing with
+
 
 ..
