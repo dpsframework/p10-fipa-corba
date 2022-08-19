@@ -1,46 +1,31 @@
-# p10-fipa-corba: <br>FIPA module belonging to JADE 4.5.x: a proposal for update to OpenJDK-18 and Java Platform Module System with embedded GlassFish CORBA ORB.
+# p10-fipa-corba
+
+- [Español](https://github.com/dpsframework/p10-fipa-corba/)
 
 
-The full description of this update proposal can be found at:
+## Proposal status
 
--  <https://dpsframework.org/proposals/P10-FIPA-CORBA_en.html>
-
-- [Versión en castellano aquí..](README.md)
-
-
-
-## 1. Background
-
-### 1.1. Proposal description
-
-- It is proposed to temporarily extract the FIPA module from the core of the JADE platform development. Since, with the current version of Java JDK-17 or higher, it is no longer possible to compile JADE. This is caused because the CORBA libraries have been removed from the core of the Java SE Standard releases and the Java JDK development release versions 17 and higher.
-
-- Once the FIPA separation of the JADE core has been carried out, it will be possible to know the scope of the necessary changes in the FIPA module; know which are the necessary libraries of GlassFish of CORBA ORB to achieve optimal stability; and allow later integration of the FIPA module with JADE compiled with OpenJDK-17 or higher.
+- **modified**:  '2022-06-18'
+- **status**:  'Completed'
+- **title**:  'Proposal: compile FIPA module with Java JDK-17'
+- **subtitle**:  'Proposal: integration study of the CORBA library used by FIPA and its possibility of adapting to the OpenJDK-17 Java compiler'
+- **abstract**:  'The FIPA module belonging to JADE 4.5.4 requires the GlassFish CORBA ORB libraries for its compilation. Before migrating from JADE 4.5.4 r6867 to Java OpenJDK-17, it is necessary to check the behavior of FIPA with higher versions of Java.'
 
 
-## 1.2 An example of the proposed module: `module-info.java` 
+##  To-Do List:
+- [x]  \(1) Achieve FIPA module compliance with the Java Platform Module System[^migra17] (JPMS) specifications.
+- [x]  \(2) Separate the FIPA module from JADE and study the particular compilation requirements with Oracle Java[^java] JDK-11 through JDK-17 LTS and higher. Further study, how to compile with OpenJDK[^openJDK] versions from openJDK-11 to OpenJDK-18.
+- [x]  \(3) Modify the FIPA Objects that prevent compiling with higher versions. Document the changes and check their integration with the JADE platform.
+- [x]  \(4) Analyze the javax used by FIPA.
+- [x]  \(5) Analyze GlassFish CORBA used by FIPA.
+- [x]  \(6) Prepare as a GitHub repository for download and evaluation.
+
+
+
+### The proposed module: `module-info.java` 
 
 ```java
-/**
- * JADE Revision 6868 version 4.5.4. by, Enrico Scagliotti and Giovanni Caire.
- * Source:   https://jade.tilab.com/svn/jade/trunk
- * Revision: 6868
- * Author: caire
- * Date: jueves, 14 de julio de 2022 11:06:20
- * Message: Properly logged the stack-trace when an unexpected error occurs creating an agent.
- * Modified : /trunk/src/jade/core/management/AgentManagementService.java
- * ---
- * Revision: 6867
- * Author: scagliotti
- * Date: viernes, 29 de abril de 2022 12:07:55
- * Message: Upgraded version to 4.5.4
- * Modified : /trunk/build.properties
- * ---
- * This proposal: P10-FIPA-CORBA   https://dpsframework.org/proposals/P10-FIPA-CORBA_en.html
- * Source at:     GitHub           https://github.com/dpsframework/p10-fipa-corba   
- * CORBA at:      https://repo1.maven.org/maven2/org/glassfish/corba/glassfish-corba-omgapi/4.1.0/
- *             glassfish-corba-omgapi-4.1.0-sources.jar          2017-07-14 15:15   1470786 
- */
+
 module org.fipa {
 	exports FIPA to com.tilab.jade;
 	
@@ -51,10 +36,9 @@ module org.fipa {
 	requires java.desktop;
 	requires java.base;
 }
-
 ```
 
-### 1.3. Raw compilation and packaging
+### A raw compilation and packaging
 
 
 ```shell
@@ -77,98 +61,262 @@ jar -cvf org.fipa-2002.jar builded/org.fipa/module-info.class -C builded/org.fip
 ```
 
 
-## OpenJDK-11  Detected Java Problems 
+## Proposal description
+ 
 
-The `master` branch contains the original source code of FIPA 2002 by JADE and CORBA indicated in previous paragraphs. The `p10-FIPA` branch contains the corrections and performance tests.
+##   Section 1: Identification
+-  Responsible for the proposal: FJAC
+-  Proposal date: January, 2022.
+-  Results location: GitHub
+
+##   Section 2: Update
+-  OpenJDK-11 to OpenJDK-18 compiler are used.
+-  FIPA implementation made by JADE in 2002 is used.
+
+###  2.1. Description of the proposal:
+
+-  It is proposed to temporarily extract the FIPA module from the core of the JADE platform development. Since, with the current version of Java JDK-18 or higher, it is no longer possible to compile JADE. This is caused because the CORBA libraries have been removed from the core of the Java SE Standard releases and the Java JDK development release versions 17 and higher.
+-  Once the FIPA separation of the JADE core has been carried out, it will be possible to know the scope of the necessary changes in the FIPA module; know which are the necessary libraries of GlassFish of CORBA ORB to achieve optimal stability; and allow later integration of the FIPA module with JADE compiled with OpenJDK-17 or higher.
+
+###  2.2. Target platform
+-  Java SE 17, OpenJDK-17 or higher, Java JDK-17 or higher. This implies that it can be used in Desktop or Server environments, with different architectures and operating systems.
+  
+-  The final objective is its integration in JADE 4.5.4, and to wait for a future revision of JADE.
 
 
-|       |  Description  |  Resource  |  Path  |  Location  |  Type  |  
-| :---: |  :---         |  :---      |  :---  |  :---      |  :---  |  
-| 1      |  Dictionary is a raw type. References to generic type Dictionary<K,V> should be parameterized  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 2      |  Hashtable is a raw type. References to generic type Hashtable<K,V> should be parameterized  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 3      |  The constructor DynamicImplementation() is deprecated  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 12  |  Java Problem  |  
-| 4      |  The constructor Integer(int) is deprecated since version 9  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 23  |  Java Problem  |  
-| 5      |  The method op_name() from the type ServerRequest is deprecated  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 27  |  Java Problem  |  
-| 6      |  The method params(NVList) from the type ServerRequest is deprecated  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 34  |  Java Problem  |  
-| 7      |  The method result(Any) from the type ServerRequest is deprecated  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 40  |  Java Problem  |  
-| 8      |  The type Delegate is not exported from this module  |  _MTSStub.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 9      |  The type DynamicImplementation is deprecated  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 9  |  Java Problem  |  
-| 10      |  The type InputStream is not exported from this module  |  AgentIDHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 34  |  Java Problem  |  
-| 11      |  The type InputStream is not exported from this module  |  AgentIDHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 12      |  The type InputStream is not exported from this module  |  AgentIDsHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 13      |  The type InputStream is not exported from this module  |  AgentIDsHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 14      |  The type InputStream is not exported from this module  |  DateTimeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 23  |  Java Problem  |  
-| 15      |  The type InputStream is not exported from this module  |  DateTimeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 16      |  The type InputStream is not exported from this module  |  EnvelopeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 82  |  Java Problem  |  
-| 17      |  The type InputStream is not exported from this module  |  EnvelopeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 18      |  The type InputStream is not exported from this module  |  EnvelopesHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 19      |  The type InputStream is not exported from this module  |  EnvelopesHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 20      |  The type InputStream is not exported from this module  |  FipaMessageHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 21      |  The type InputStream is not exported from this module  |  FipaMessageHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 22      |  The type InputStream is not exported from this module  |  MTSHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 16  |  Java Problem  |  
-| 23      |  The type InputStream is not exported from this module  |  MTSHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 24      |  The type InputStream is not exported from this module  |  OptAgentIDHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 24  |  Java Problem  |  
-| 25      |  The type InputStream is not exported from this module  |  OptAgentIDHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 26      |  The type InputStream is not exported from this module  |  OptDateTimeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 24  |  Java Problem  |  
-| 27      |  The type InputStream is not exported from this module  |  OptDateTimeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 28      |  The type InputStream is not exported from this module  |  OptReceivedObjectHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 24  |  Java Problem  |  
-| 29      |  The type InputStream is not exported from this module  |  OptReceivedObjectHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 30      |  The type InputStream is not exported from this module  |  OptTransportBehaviourTypeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 27  |  Java Problem  |  
-| 31      |  The type InputStream is not exported from this module  |  OptTransportBehaviourTypeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 32      |  The type InputStream is not exported from this module  |  PayloadHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 19  |  Java Problem  |  
-| 33      |  The type InputStream is not exported from this module  |  PayloadHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 34      |  The type InputStream is not exported from this module  |  PropertyHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 17  |  Java Problem  |  
-| 35      |  The type InputStream is not exported from this module  |  PropertyHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 36      |  The type InputStream is not exported from this module  |  ReceivedObjectHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 20  |  Java Problem  |  
-| 37      |  The type InputStream is not exported from this module  |  ReceivedObjectHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 38      |  The type InputStream is not exported from this module  |  TransportBehaviourTypeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 39      |  The type InputStream is not exported from this module  |  TransportBehaviourTypeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 40      |  The type InputStream is not exported from this module  |  URLHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 16  |  Java Problem  |  
-| 41      |  The type InputStream is not exported from this module  |  stringsHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 42      |  The type InputStream is not exported from this module  |  stringsHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 25  |  Java Problem  |  
-| 43      |  The type OutputStream is not exported from this module  |  AgentIDHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 44      |  The type OutputStream is not exported from this module  |  AgentIDHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 45      |  The type OutputStream is not exported from this module  |  AgentIDsHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 46      |  The type OutputStream is not exported from this module  |  AgentIDsHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 47      |  The type OutputStream is not exported from this module  |  DateTimeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 48      |  The type OutputStream is not exported from this module  |  DateTimeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 49      |  The type OutputStream is not exported from this module  |  EnvelopeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 50      |  The type OutputStream is not exported from this module  |  EnvelopeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 51      |  The type OutputStream is not exported from this module  |  EnvelopesHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 52      |  The type OutputStream is not exported from this module  |  EnvelopesHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 53      |  The type OutputStream is not exported from this module  |  FipaMessageHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 54      |  The type OutputStream is not exported from this module  |  FipaMessageHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 55      |  The type OutputStream is not exported from this module  |  MTSHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 56      |  The type OutputStream is not exported from this module  |  MTSHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 57      |  The type OutputStream is not exported from this module  |  OptAgentIDHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 58      |  The type OutputStream is not exported from this module  |  OptAgentIDHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 59      |  The type OutputStream is not exported from this module  |  OptDateTimeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 60      |  The type OutputStream is not exported from this module  |  OptDateTimeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 61      |  The type OutputStream is not exported from this module  |  OptReceivedObjectHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 62      |  The type OutputStream is not exported from this module  |  OptReceivedObjectHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 63      |  The type OutputStream is not exported from this module  |  OptTransportBehaviourTypeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 64      |  The type OutputStream is not exported from this module  |  OptTransportBehaviourTypeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 65      |  The type OutputStream is not exported from this module  |  PayloadHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 66      |  The type OutputStream is not exported from this module  |  PayloadHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 67      |  The type OutputStream is not exported from this module  |  PropertyHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 68      |  The type OutputStream is not exported from this module  |  PropertyHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 69      |  The type OutputStream is not exported from this module  |  ReceivedObjectHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 70      |  The type OutputStream is not exported from this module  |  ReceivedObjectHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 71      |  The type OutputStream is not exported from this module  |  TransportBehaviourTypeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 72      |  The type OutputStream is not exported from this module  |  TransportBehaviourTypeHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 73      |  The type OutputStream is not exported from this module  |  URLHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 74      |  The type OutputStream is not exported from this module  |  stringsHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 13  |  Java Problem  |  
-| 75      |  The type OutputStream is not exported from this module  |  stringsHolder.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 21  |  Java Problem  |  
-| 76      |  The value of the local variable _memberCount is not used  |  AgentIDHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 71  |  Java Problem  |  
-| 77      |  The value of the local variable _memberCount is not used  |  DateTimeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 46  |  Java Problem  |  
-| 78      |  The value of the local variable _memberCount is not used  |  EnvelopeHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 173  |  Java Problem  |  
-| 79      |  The value of the local variable _memberCount is not used  |  FipaMessageHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 52  |  Java Problem  |  
-| 80      |  The value of the local variable _memberCount is not used  |  PropertyHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 34  |  Java Problem  |  
-| 81      |  The value of the local variable _memberCount is not used  |  ReceivedObjectHelper.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 40  |  Java Problem  |  
-| 82      |  Type safety: The method put(Object, Object) belongs to the raw type Dictionary. References to generic type Dictionary<K,V> should be parameterized  |  _MTSImplBase.java  |  /org.fipa/src/main/java/org.fipa/FIPA  |  line 23  |  Java Problem  |  
+
+
+###  23. What does the update proposal need?
+-  Access to the code of the FIPA module of the JADE Platform. Found at: <https://jade.tilab.com/svn/jade/trunk/>
+-  A development environment. Eclipse 2021-12 has been used.
+-  A detailed compilation of the errors offered by the OpenJDK-17/ Java JDK-17 compiler; its progressive correction; the incorporation of the Java Platform Module System to allow later integration of this FIPA module with the JADE platform.
+
+
+###  2.4. Why this proposal?
+-  Because the evolution of the Java compiler has removed the CORBA libraries from the Java core.
+-  Because it is not possible to compile the JADE Platform on top of Java OpenJDK-17. The only way is to add the GlassFish CORBA ORB libraries to the CLASSPATH. Requiring, in turn, the distribution of JADE with these specific libraries.
 
 
 
 
 
-..
+
+###  2.5. Underlying technology or technologies:
+-  OpenJDK-9 to OpenJDK18.
+-  Oracle Java JDK-9 through Oracle Java JDK-18.
+-  GlassFish CORBA ORB 2.4
+
+
+
+
+
+
+
+
+
+###  2.6. Package name for API proposal?
+-  File: **org-fipa-2002.jar**
+-  Package: **FIPA**
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  2.7. Dependencies on specific operating systems
+-  Those corresponding to the version and architecture of the Java compiler.
+
+
+
+
+
+
+
+
+
+
+
+
+###  2.8. Security issues due to the current security model
+-  They have not been analyzed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  2.9. Internationalization or localization problems?
+-  They have not been implemented.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  2.10. Any need for revision as a result of this work?
+-  It has not been planned. Awaiting review.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  2.11. Schedule for the development of this proposal
+-   Start: **January 2022**
+-   End: **July 2022**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##   Section 3: Contributions
+
+
+
+
+###  3.1. Documents, proposals or implementations that describe the technology.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  3.2. Starting point of the work.
+-   FIPA module implemented by TILAB, within the development of JADE.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##   Section 4: Additional Information (Optional)
+
+
+
+
+
+
+
+
+
+
+
+
+###  4.1. Additional information to include in the Improvement Proposal
+-  Other relevant documents include the following FIPA documents, which can be found at http://www.fipa.org
+  
+1. [FIPA00003] FIPA Agent Communication Language Specification (http://www.fipa.org/fipa00003/),
+1. [FIPA00007] FIPA Content Languages Specification (http://www.fipa.org/fipa00007/),
+1. [FIPA00008] FIPA SL Content Language Specification (http://www.fipa.org/fipa00008/),
+1. [FIPA00009] FIPA CCL Content Language Specification (http://www.fipa.org/fipa00009/),
+1. [FIPA00010] FIPA KIF Content Language Specification (http://www.fipa.org/fipa00010/),
+1. [FIPA00011] FIPA RDF Content Language Specification (http://www.fipa.org/fipa00011/),
+1. [FIPA00067] FIPA Message Transport Service Specification (http://www.fipa.org/fipa00067/),
+1. [FIPA00068] FIPA ACL Message Representation Library Specification (http://www.fipa.org/fipa00068/),
+1. [FIPA00069] FIPA ACL Message Representation in Bit-efficient Encoding Specification (http://www.fipa.org/fipa00069/),
+1. [FIPA00070] FIPA ACL Message Representation in String Specification (http://www.fipa.org/fipa00070 /),
+1. [FIPA00071] FIPA ACL Message Representation in XML Specification (http://www.fipa.org/fipa00071/),
+1. [FIPA00072] FIPA Agent Message Transport Envelope Representation Library Specification (http://www.fipa.org/fipa00072/),
+1. [FIPA00073] FIPA Agent Message Transport Envelope Representation in String Specification (http://www.fipa.org/fipa00073/),
+1. [FIPA00074] FIPA Agent Message Transport Protocol Library Specification (http://www.fipa.org/fipa00074/),
+1. [FIPA00075] FIPA Agent Message Transport Protocol for IIOP Specification (http://www.fipa.org/fipa00075/),
+1. [FIPA00076] FIPA Agent Message Transport Protocol for WAP Specification (http://www.fipa.org/fipa00076/).
+
+
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+##  _References_
+
+[^1]: CLIPS Rule Based Programming Language Files. Expert System Tool. Gary, Riley D. (Ed. 2022). URL: https://sourceforge.net/projects/clipsrules/.
+
+[^java]: ORACLE Java 17 is the latest long-term support (LTS) release under Java's six-month release cadence and is the result of extensive collaboration between Oracle engineers and other members of the worldwide Java developer community via the OpenJDK Community and the Java Community Process (JCP). Verificada con la versioón jdk-17.0.3.1 (junio, 2022). https://www.oracle.com/news/announcement/oracle-releases-java-17-2021-09-14/.
+
+[^jade]:    JADE Platform. jade - Revision 6867: /trunk. https://jade.tilab.com/svn/jade/trunk/  Login/passwod: jade/jade. Version 4.5.4 (abril, 2022).
+
+[^migra17]: Significant Changes in JDK 17 Release. Notes for additional descriptions of the new features and enhancements, and API specification in JDK 17. Updates in Java SE 17 and JDK 17: https://docs.oracle.com/en/java/javase/17/migrate/significant-changes-jdk-release.html
+
+[^openJDK]: OpenJDK 17 is the open-source reference implementation of version 17 of the Java SE Platform, as specified by by JSR 390 in the Java Community Process. JDK 17 reached General Availability on 14 September 2021. URL for OpenJDK-11 is: https://openjdk.java.net/projects/jdk/11/. URL for OpenJDK-17 is: https://openjdk.java.net/projects/jdk/17/.
+
+[^cool]: COOL is the acronym for CLIPS Object Oriented Language.
+
+
+
